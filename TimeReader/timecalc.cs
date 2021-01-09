@@ -1,25 +1,24 @@
-﻿// Use this code inside a project created with the Visual C# > Windows Desktop > Console Application template.
-// Replace the code in Program.cs with this code.
-
-using System;
+﻿using System;
 using System.IO.Ports;
 using System.Threading;
+using System.Collections.Generic;
 
 public class PortChat
 {
     static bool _continue;
     static SerialPort _serialPort;
+    List<string> deviceTimeStamps = new List<string>();
+    List<string> userTimeStamps = new List<string>();
 
     public static void Main()
     {
         string name;
         string message;
-        string[] deviceTimeStamps, userMessage;
-        int readCounter = 0;
-        int userWriteCounter = 0;
         StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
+
+        //TODO convert to async so that userInputReader can be running simultaneously
         Thread readThread = new Thread(Read);
-        Thread writeThread = new Thread();
+
         // Create a new SerialPort object with default settings.
         _serialPort = new SerialPort();
 
@@ -46,9 +45,7 @@ public class PortChat
 
         while (_continue)
         {
-            //TODO, figure out why these variables seem to be out of scope
-            deviceTimeStamps[readCounter] = Console.ReadLine();
-            readCounter++;
+            message = Console.ReadLine();
 
             if (stringComparer.Equals("quit", message))
             {
@@ -63,29 +60,22 @@ public class PortChat
 
         readThread.Join();
         _serialPort.Close();
-
-        while(_continue)
-        {
-            if (stringComparer.Equals("quit", userMessage))
-            {
-                _continue = false;
-            }
-            else
-            {
-                userMessage[userWriteCounter] = Console.ReadLine();
-                userWriteCounter++;
-            }
-        }
     }
 
+    //TODO convert to async method, change so that it can either be passed deviceTimeStamps by reference or return deviceTimeStamps
     public static void Read()
     {
+        List<string> deviceTimeStamps = new List<string>();
         while (_continue)
         {
             try
             {
+                var counter = 0;
                 string message = _serialPort.ReadLine();
-                Console.WriteLine(message);
+                //Console.WriteLine(message);
+                deviceTimeStamps.Add(message);
+                Console.WriteLine(deviceTimeStamps[counter]);
+                counter++;
             }
             catch (TimeoutException) { }
         }
@@ -205,5 +195,39 @@ public class PortChat
         }
 
         return (Handshake)Enum.Parse(typeof(Handshake), handshake, true);
+    }
+    //reads user input to a list to be returned for passing into a parsing and then a calculation function 
+    public static List<string> userInputReader(string[] args)
+    {
+        List<string> userTimeInput = new List<string>();
+        int i = 0;
+        userTimeInput.Add(" ");
+        while (userTimeInput[i] != "quit")
+        {
+            string readMessage;
+            readMessage = Console.ReadLine();
+            userTimeInput.Add(readMessage);
+            i++;
+        }
+        for (int j = 0; j < i; j++)
+        {
+            Console.WriteLine(userTimeInput[j]);
+        }
+        return userTimeInput;
+    }
+
+    public static double timeMath(double userTime, double deviceTime)
+    {
+        double timeDifference;
+        if (deviceTime - userTime < 0)
+        {
+            timeDifference = deviceTime - userTime + 1000;
+        }
+        else
+        {
+            timeDifference = deviceTime - userTime;
+        }
+
+        return timeDifference;
     }
 }
