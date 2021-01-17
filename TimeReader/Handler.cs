@@ -13,6 +13,11 @@ namespace TimeReader
         private SerialPort _serialPort;
         private List<string> deviceTimeStamps = new List<string>();
         private List<string> userTimeStamps = new List<string>();
+        public Handler()
+        {
+            //guess we don't really need this for the moment. 
+        }
+
         public async Task<bool> Run()
         {
             string name;
