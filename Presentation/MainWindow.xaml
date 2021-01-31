@@ -1,0 +1,87 @@
+﻿<Window x:Class="Presentation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Presentation"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1500">
+    <Grid>
+        <DataGrid x:Name="times" AutoGenerateColumns="false" Height="Auto">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Name="carNumber" Text="{Binding CarNumber, Mode = TwoWay}" Width="300" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--<DataGridTextColumn Header="CarNumber"  Binding="{Binding CarNumber, Mode = TwoWay}" Width="300" />-->
+                <DataGridTextColumn Header="StartTime"  Binding="{Binding StartTime, Mode = TwoWay}" Width="300" />
+                <DataGridTextColumn Header="EndTime"  Binding="{Binding EndTime, Mode = TwoWay}" Width="300" />
+                <DataGridTextColumn Header="CalculatedTime"  Binding="{Binding CalculatedTime, Mode = TwoWay}" Width="300" />
+                <DataGridTextColumn Header="Status"  Binding="{Binding Status, Mode = TwoWay}" Width="300" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBox Name="carNumber" Grid.Column="1" Text="{Binding CarNumber, Mode = TwoWay}"></TextBox>
+        <TextBox Name="startTime" Grid.Column="2" Text="{Binding StartTime, Mode = TwoWay}"></TextBox>
+        <TextBox Name="endTime" Grid.Column="3" Text="{Binding EndTime, Mode = TwoWay}"></TextBox>
+        <TextBox Name="calculatedTime" Grid.Column="4" Text="{Binding CalculatedTime, Mode = TwoWay}"></TextBox>
+        <TextBox Name="status" Grid.Column="5" Text="{Binding Status, Mode = TwoWay}"></TextBox>-->
+    </Grid>
+    <!--<FlowDocument ColumnWidth="1500">
+        
+        <Table>
+            <Table.Columns>
+                <TableColumn Width="300" />
+                <TableColumn Width="300" />
+                <TableColumn Width="300" />
+                <TableColumn Width="300" />
+                <TableColumn Width="300" />
+            </Table.Columns>
+            <TableRowGroup>
+                <TableRow>
+                    <TableCell>
+                        <Paragraph>
+                            Car Number
+                        </Paragraph>
+                    </TableCell>
+                    <TableCell>
+                        <Paragraph>
+                            Start Time
+                        </Paragraph>
+                    </TableCell>
+                    <TableCell>
+                        <Paragraph>
+                            End Time
+                        </Paragraph>
+                    </TableCell>
+                    <TableCell>
+                        <Paragraph>
+                            Calculated Time
+                        </Paragraph>
+                    </TableCell>
+                    <TableCell>
+                        <Paragraph>
+                            Status
+                        </Paragraph>
+                    </TableCell>
+                </TableRow>
+            </TableRowGroup>
+        </Table>
+        <Paragraph>
+            <Button Content="Add Row" Click="AddRow" />
+        </Paragraph>
+    </FlowDocument>-->
+</Window>

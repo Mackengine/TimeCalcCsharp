@@ -16,6 +16,10 @@ namespace TimeReader
         private List<string> deviceTimeStamps = new List<string>();
         private List<double> doubleTimeStamps = new List<double>();
         private List<string> userTimeStamps = new List<string>();
+        public Handler()
+        {
+            //guess we don't really need this for the moment. 
+        }
         private List<string> outputTimeStamps = new List<string>();
         public async Task<bool> Run()
         {
