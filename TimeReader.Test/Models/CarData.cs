@@ -13,5 +13,6 @@ namespace TimeReader.Test.Models
         public List<String> serialMessages { get; set; }
         public List<CarTime> data { get; set; }
         public SerialPort usb { get; set; }
+        public String current { get; set; }
     }
 }

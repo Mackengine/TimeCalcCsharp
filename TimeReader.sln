@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeReader", "TimeReader\Ti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeReader.Test", "TimeReader.Test\TimeReader.Test.csproj", "{74820D6F-AC10-4294-980D-2661F619433F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{EB4F837F-33AC-4F52-9DCF-1A8A249E9220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{74820D6F-AC10-4294-980D-2661F619433F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74820D6F-AC10-4294-980D-2661F619433F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74820D6F-AC10-4294-980D-2661F619433F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB4F837F-33AC-4F52-9DCF-1A8A249E9220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB4F837F-33AC-4F52-9DCF-1A8A249E9220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB4F837F-33AC-4F52-9DCF-1A8A249E9220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB4F837F-33AC-4F52-9DCF-1A8A249E9220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
