@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TimeReader.Test.Models;
@@ -79,8 +80,10 @@ namespace TimeReader.Test.Helpers
             //Console.WriteLine("Data Received:");
             CarTime newest;
             decimal d;
-            if (sharedData.current.Trim().Contains("(M)"))
+            if (sharedData.current.Trim().Contains("(S)") || sharedData.current.Contains("(M)"))
             {
+                //s is a split which we want, m is a manual stop, which we'll need to at least compensate for
+
                 if (!decimal.TryParse(CleanRawUsb(sharedData.current), out d))
                 {
                     Console.WriteLine($"Skipped: {sharedData.current}");
@@ -105,6 +108,9 @@ namespace TimeReader.Test.Helpers
 
         private String CleanRawUsb(String input)
         {
+            Regex regex = new Regex("[^0-9.]");
+            String result = regex.Replace(input, String.Empty);
+            return result;
             return input.Replace("\u000e", String.Empty)
                 .Replace("\u000f", String.Empty)
                 .Replace("\r", String.Empty)
