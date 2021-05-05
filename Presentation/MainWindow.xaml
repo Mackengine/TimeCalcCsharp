@@ -7,6 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1500">
     <StackPanel Height="Auto">
+        <StackPanel Height="120" Orientation="Vertical" Margin="10">
+            <StackPanel Width="Auto" Orientation="Horizontal">
+                <Label Width="100" Margin="2">Select COM Port:</Label>
+                <ComboBox  Margin="2" x:Name="usbPorts" Width="200">
+                    <ComboBoxItem>1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                    <ComboBoxItem>9</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                </ComboBox>
+                <Button Margin="2" x:Name="usbChooser" Height="50" Width="200">Select USB Port For Timer</Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Height="100" Orientation="Vertical" Margin="10">
+            <TextBlock x:Name="timerStatus">Timer Not Connected</TextBlock>
+        </StackPanel>
         <StackPanel Height="700" Orientation="Vertical">
             <DataGrid x:Name="times" AutoGenerateColumns="false" Height="700">
                 <DataGrid.Columns>

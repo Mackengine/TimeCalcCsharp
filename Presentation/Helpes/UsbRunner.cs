@@ -13,6 +13,7 @@ namespace Presentation.Helpes
         public UsbRunner(String port)
         {
             usb = new SerialPort();
+            
             //set default parameters.
             usb.PortName = port;
             usb.ReadTimeout = 500;
@@ -27,8 +28,16 @@ namespace Presentation.Helpes
 
         public bool Setup(SerialDataReceivedEventHandler theHandler)
         {
-            usb.DataReceived += theHandler;
-            usb.Open();
+            try
+            {
+                usb.DataReceived += theHandler;
+                usb.Open();
+            }
+            catch
+            {
+                return false;
+            }
+            
 
             return true;
         }

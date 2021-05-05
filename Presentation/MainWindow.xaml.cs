@@ -2,8 +2,10 @@
 using Presentation.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -27,26 +29,63 @@ namespace Presentation
     {
         private CarData sharedData;
         private UsbRunner usb;
+        private ObservableCollection<ComboBoxItem> availableUsbPorts = new ObservableCollection<ComboBoxItem>();
+        //private ComboBoxItem selectedUsbPort = null;
+        private ExcelAuditor auditor = new ExcelAuditor();
         public MainWindow()
         {
             InitializeComponent();
 
             //test data
             sharedData = new CarData() { data = new List<CarTimeRow>(), current = String.Empty };
-            sharedData.data.Add(new CarTimeRow() { CarNumber = "7", StartTime = "3", EndTime = "4", CalculatedTime = "5", Status = "Recalculating ..." });
-            sharedData.data.Add(new CarTimeRow() { CarNumber = "118", StartTime = "0", EndTime = "1", CalculatedTime = "2", Status = "Success" });
-            //this.DataContext = data;
             this.times.ItemsSource = sharedData.data;
-            //this.times.DataContext = data;
+
             //Since everything will need small tweaks, rather than reference the other
             //projects I'm going to commit a sin and copy/paste
-            usb = new UsbRunner("COM3");
-            usb.Setup(new SerialDataReceivedEventHandler(SerialDataReceivedHandler));
+            //String[] ports = System.IO.Ports.SerialPort.GetPortNames();
+            //SetAvailableUsbPorts(GetAvailableUsbPorts().ToArray());
 
+            usbChooser.Click += ChooseUsb;
             rowAdder.Click += AddRow;
 
             SetTimer();
         }
+
+        private IEnumerable<String> GetAvailableUsbPorts()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort");
+            //ManagementObjectCollection usbs = ;
+            List<String> result = new List<String>();
+            foreach (ManagementObject usb in searcher.Get())
+            {
+                result.Add(usb["Name"].ToString());
+            }
+
+            return result;
+        }
+
+        //private void SetAvailableUsbPorts(String[] allUsbPorts)
+        //{
+        //    if (allUsbPorts.Length == 0)
+        //    {
+        //        allUsbPorts = new string[1] { "No Usb Connected" };
+        //    }
+        //    foreach (String p in allUsbPorts)
+        //    {
+        //        if (selectedUsbPort == null)
+        //        {
+        //            selectedUsbPort = new ComboBoxItem() { Content = p, IsSelected = true };
+        //            availableUsbPorts.Add(selectedUsbPort);
+        //        }
+        //        else
+        //        {
+        //            availableUsbPorts.Add(new ComboBoxItem() { Content = p });
+        //        }
+        //    }
+
+        //    usbPorts.ItemsSource = availableUsbPorts;
+        //    usbPorts.Items.Refresh();
+        //}
 
         public void SetTimer()
         {
@@ -61,6 +100,11 @@ namespace Presentation
             try
             {
                 this.times.Items.Refresh();
+                //String[] ports = System.IO.Ports.SerialPort.GetPortNames();
+                //if (ports.Length > 0)
+                //{
+                //    this.SetAvailableUsbPorts(ports);
+                //}
             }
             catch
             {
@@ -85,16 +129,23 @@ namespace Presentation
                     return;
                 }
 
-                newest = sharedData.data.FirstOrDefault(dd => String.IsNullOrEmpty(dd.EndTime));
+                newest = sharedData.data.FirstOrDefault(dd => String.IsNullOrEmpty(dd.StartTime));
                 if (newest != null)
                 {
-                    newest.EndTime = d.ToString();
-                    CalculateElapsedTime(newest, d);
+                    newest.StartTime = d.ToString();
+                    //CalculateElapsedTime(newest, d);
                 }
                 else
                 {
-                    Console.WriteLine($"Found a time with no match: {d}");
-                    sharedData.data.Add(new CarTimeRow() { CarNumber = String.Empty, StartTime = String.Empty, EndTime = d.ToString(), CalculatedTime = String.Empty, Status = "Unknown" });
+                    //Console.WriteLine($"Found a time with no match: {d}");
+                    sharedData.data.Add(new CarTimeRow() 
+                    { 
+                        CarNumber = String.Empty, 
+                        StartTime = d.ToString(), 
+                        EndTime = String.Empty, 
+                        CalculatedTime = String.Empty, 
+                        Status = "Started" 
+                    });
                 }
                 //reset
                 sharedData.current = String.Empty;
@@ -110,7 +161,10 @@ namespace Presentation
                 return;
             }
             //TODO: If it rolls over, compensate for that
-            newest.CalculatedTime = (finish - start).ToString();
+            //newest.CalculatedTime = (finish - start).ToString();
+
+            //audit
+            auditor.WriteToDisk(sharedData.data);
         }
 
         private String CleanRawUsb(String input)
@@ -124,6 +178,26 @@ namespace Presentation
         {
             sharedData.data.Add(new CarTimeRow() { CarNumber = String.Empty, StartTime = String.Empty, EndTime = String.Empty, CalculatedTime = String.Empty, Status = "New" });
             this.times.Items.Refresh();
+        }
+
+        private void ChooseUsb(object sender, RoutedEventArgs e)
+        {
+            String value = ((ComboBoxItem)usbPorts.SelectedValue).Content.ToString();
+            if (value == "No Usb Connected")
+            {
+                timerStatus.Text = "No Usb Connected, Please install a Usb device.";
+                return;
+            }
+            usb = new UsbRunner(value);
+            bool usbWorking = usb.Setup(new SerialDataReceivedEventHandler(SerialDataReceivedHandler));
+            if (!usbWorking)
+            {
+                timerStatus.Text = "COM port failed to open. Make sure timer is connected.";
+            }
+            else
+            {
+                timerStatus.Text = "COM port connected."
+            }
         }
     }
 }
